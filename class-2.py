@@ -10,6 +10,9 @@ class Worker(object):
 
     def show_pay(self):
         print(int(self.pay))
+
+    def get_pay(self):
+        return(int(self.pay))
         
 def proc_pay():
     for driver, sal in drivers.items():
@@ -19,5 +22,8 @@ def proc_pay():
         r = Worker(driver, sal)
         r.set_pay(0.12)
         r.show_pay()
+        # update sal
+        new_sal = (r.get_pay())
+        drivers.update({driver : new_sal})
    
 proc_pay()
