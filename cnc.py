@@ -1,5 +1,9 @@
 #!/usr/bin/python
 # Dr Pi - 11/12/2019
+# supply coordinates in a text file called "job.txt" - file needs specific format: 
+# 'job.txt' format follows:
+# G01 X10 Y15
+# G01 X20 Y25 
 
 from adafruit_motor import stepper
 from adafruit_motorkit import MotorKit
