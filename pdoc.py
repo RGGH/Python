@@ -1,6 +1,7 @@
 '''
 Dynamically generate word documents using data from a CSV - with 1 template file.
 '''
+# Use with : template.docx in same dir
 # pip install python-docx
 # pip install docxtpl <- Better for making new files from a template
 import random
