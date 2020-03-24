@@ -1,0 +1,44 @@
+import string
+
+alph = string.ascii_lowercase
+symbols = alph +"0123456789 "
+key = 13
+tx = "uryy1"
+print(f"The Character Set is : {symbols}")
+
+lsm = len(symbols)
+mode = 1
+
+class Caesar():
+
+    def __init__(self, key,tx, mode):
+        self.key = key
+        self.tx = tx
+        self.mode = mode
+
+    def endecrypt(self):
+        res = ""
+        if mode == 0:
+            for i in tx:
+                if i in symbols:
+                    # encrpypt and check for wrapround
+                    if (symbols.find(i) + key) >= lsm:
+                        new_index = symbols.find(i) - key
+                    else:
+                        new_index = symbols.find(i) + key
+                    res +=(symbols[new_index])
+            return(f"The encrypted version of {tx} is {res}")
+        else:
+            for i in tx:
+                if i in symbols:
+                    # decrypt and check for wrapround
+                    if (symbols.find(i) - key) <= lsm:
+                        new_index = symbols.find(i) - key
+                    else:
+                        new_index = symbols.find(i) + key
+                    res +=(symbols[new_index])
+            return(f"The decrypted version of {tx} is {res}")
+
+c = Caesar(key,tx, mode)
+
+print(c.endecrypt())
