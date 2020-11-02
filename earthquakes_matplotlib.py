@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+#+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+#|r|e|d|a|n|d|g|r|e|e|n|.|c|o|.|u|k|
+#+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+# Use with data from https://earthquake.usgs.gov/earthquakes
+
 import os
 import json
 from plotly.graph_objs import Scattergeo, Layout
