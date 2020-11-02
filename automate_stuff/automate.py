@@ -23,6 +23,17 @@ def main():
         os.chdir(project)
         fls=["audio","video","images", "images/ppt","images/photoshopped","output","text"]
         [os.mkdir(i) for i in fls]
+        
+        # make a readme.md for GitHub
+        try:
+            with open(videos_dir + "readme.txt") as s:
+                rm = s.read()
+            with open ("text/readme.md","w") as f:
+                f.write(rm)
+        except:
+            pass
+
+        # finish up - show dirs and open explorer
         os.listdir(os.getcwd())
         print(os.listdir(os.getcwd()))
         path = os.listdir(os.getcwd())
