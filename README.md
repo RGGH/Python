@@ -1,6 +1,6 @@
 # Python
 
-Useful scripts for automating workflow
+Useful scripts for automating workflow to follow
 
 ## This will include automating the readme.md
 
