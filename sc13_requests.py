@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+#+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+#|r|e|d|a|n|d|g|r|e|e|n|.|c|o|.|u|k|
+#+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-
-# api demo
+''' API example using json=payload '''
 
 import requests
 import json
