@@ -28,6 +28,6 @@ def get_items(keywords):
             condition = "n/a"    
          print(title,"\t",condition,"\t",price)
 
-# main driver
+# main driver #
 if __name__== "__main__":
     get_items(get_kw())
