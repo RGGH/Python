@@ -1,7 +1,7 @@
 import json
 from ebaysdk.finding import Connection as finding # install with pip
 from bs4 import BeautifulSoup # install with pip
-from ebayapi import ebayapi # My API key
+from ebayapi import ebayapi # My API key - register for your own
 import time
 
 # read search keywords, line by line, from a text file "ebay_search.txt"
