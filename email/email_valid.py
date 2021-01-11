@@ -7,16 +7,14 @@
 import dns.resolver
 import re
 
-txt = "The rain in spain falls mainly on the plane"
-
 # 1 - check for typo in domain name
 example = "test@gmail.com"
 if re.search("@gm(ia|a|i)l.com$", example):
 	print("did you mean gmail.com")
 
-# 2 - 
-address_to_verify = 'sales@subscribetodrpi.com'
-match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', address_to_verify)
+# 2 - check if the address is a valid format
+address_to_verify = "sales@subscribetodrpi.com"
+match = re.match("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$", address_to_verify)
 
 if match == None:
 	print("Bad Syntax")
@@ -24,7 +22,7 @@ if match == None:
 
 # 3 Check the MX record 
 try:
-	records = dns.resolver.resolve('http://subscribetodrpi.com/', 'MX')
+	records = dns.resolver.resolve("http://subscribetodrpi.com/", 'MX')
 	mx_record = records[0].exchange
 	mx_record = str(mx_record)
 	print(mx_record)
