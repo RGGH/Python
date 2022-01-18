@@ -8,7 +8,4 @@ Useful scripts for automating workflow to follow
 
 
 
-<p align="center">
-  <img src="/images/pb1_LI.jpg">
-</p>
 
