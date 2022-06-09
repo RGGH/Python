@@ -1,7 +1,8 @@
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |r|e|d|a|n|d|g|r|e|e|n|.|c|o|.|u|k|
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 """ elongated tic-tac-toe for minimax study """
-
-from re import I
-
 
 player1 = +1
 comp = -1
@@ -36,8 +37,6 @@ def check_win(sq_id):
         for j in range(rows):
             if j == j+1:
                 print("OH")
-
-
 
 def player1(sq_id):
     """ update inner playable grid with user input """
