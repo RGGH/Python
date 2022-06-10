@@ -1,7 +1,6 @@
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  |r|e|d|a|n|d|g|r|e|e|n|.|c|o|.|u|k|
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 """ elongated tic-tac-toe for minimax study """
 
 player1 = +1
@@ -21,42 +20,40 @@ cols=bwidth-2
 
 playable = rows * cols
 
-def grid():
-    """ idenitfy inner, playable grid """
-    sq_id=[]
-    i=0
-    while i < len(board): 
-        if board[i] != 99:
-            sq_id.append ((board[i]))
-        i+=1
-    return sq_id
+def gen_rowcols(board):
+    """ filter the playable coordinates """
+    sq_ids=[]
+    for h in range(bheight):
+        if h > 0 and h < bheight-1:
+            for w in range(bwidth): 
+                if w > 0 and w < bwidth-1:
+                    x=h,w
+                    sq_ids.append (x)
+    return sq_ids
 
 
-def check_win(sq_id):
-    for i in range (cols):
-        for j in range(rows):
-            if j == j+1:
-                print("OH")
+def check_win(sq_ids):
+    pass
 
-def player1(sq_id):
-    """ update inner playable grid with user input """
-    print(f"which square? - top left = 1 bottom right = {playable} ")
-    x=int(input())
-    sq_id[x]=x
-    print(sq_id)
 
-def player2(sq_id):
-    """ update inner playable grid with user input """
-    print(f"which square? - top left = 1 bottom right = {playable} ")
-    x=int(input())
-    sq_id[x]=-x
-    print(sq_id)
+# def player1(sq_ids):
+#     """ update inner playable grid with user input """
+#     print(f"which square? - top left = 1 bottom right = {playable} ")
+#     x=int(input())
+#     sq_ids[1]=x
+#     print(sq_ids)
+
+# def player2(sq_ids):
+#     """ update inner playable grid with user input """
+#     print(f"which square? - top left = 1 bottom right = {playable} ")
+#     x=int(input())
+#     sq_ids[x]=-x
+#     print(sq_ids)
 
 
 # main driver
 if __name__ == "__main__":
-    sq = grid()
-    check_win(sq)
-    # add code for game loop
-    player1(sq)
-    player3(sq)
+
+    sq = gen_rowcols(board)
+    print(sq)
+
