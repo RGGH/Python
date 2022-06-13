@@ -27,6 +27,13 @@ col=0
 board_len = board_h * board_w
 move_counter = 1
 #-------------------------
+def moves_left(board) :
+        
+    for i in range(board_h) :
+        for j in range(board_w) :
+            if (board[j+board_w*i] == 0) :
+                return True
+    return False
 
 def print_board(board):
     for i in range(board_h):
@@ -42,7 +49,7 @@ def get_move(row,col,player,board):
     # Get Row
     while user_choice < 1 or user_choice > rows:
         try:
-            user_choice = int(input(f"Please choose a row number between 1 and {rows} >"))
+            user_choice = int(input(f"Please choose a row number between 1 and {rows} > "))
         except ValueError:
             print('We expect you to enter a valid integer')
         row = user_choice
@@ -70,6 +77,12 @@ def get_move(row,col,player,board):
 # ------------ #
 
 while True:
+
+    """ check if any moves available """
+    if moves_left(board)==False:
+        print("No moves left")
+        break
+
     """ run the game loop """
     if move_counter % 2 != 0:
         player = 1
