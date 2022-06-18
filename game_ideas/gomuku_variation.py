@@ -83,7 +83,7 @@ def get_move(rw:int,cl:int,player:int,brd:List)->board:
     # Get col
     while user_choice < 1 or user_choice > COLS:
         try:
-            user_choice = int(input(f"Please choose a colum number between 1 and {ROWS} > "))
+            user_choice = int(input(f"Please choose a colum number between 1 and {COLS} > "))
         except ValueError:
             print('We expect you to enter a valid integer')
         cl = user_choice
