@@ -46,7 +46,6 @@ def moves_left(brd) :
     return False
 
 def print_board(brd):
-    """ Show the board to the PLAYER """
     print("\n")
     for i in range(BOARD_H):
         for j in range(BOARD_W):
@@ -62,11 +61,14 @@ def evaluate() :
     for i in range(1,BOARD_H):
         for j in range(1,BOARD_W-1) :
             if 0 < board[j+(BOARD_W*i)] <9:
-                if (board[j+(BOARD_W)*i]==board[j+(BOARD_W*i)+1]):
+                if (board[j+(BOARD_W)*i]==board[j+(BOARD_W*i)+1] and board[j+(BOARD_W*i)+1] ==  board[j+(BOARD_W*i)+2]):
+                    print(f"\n\t !!! 3 in a row for : player {board[j+(BOARD_W)*i]} on row {i}!!!")
+                    break
+                elif (board[j+(BOARD_W)*i]==board[j+(BOARD_W*i)+1]):
                     print(f"\n\t !!! 2 in a row on row {i}!!!")
 
 def get_move(rw:int,cl:int,player:int,brd:List)->board:
-    """ get the row and column number from user """
+    ''' get the row and column number from user '''
     
     user_choice = 0
     print(f"\nPlayer {player} enter your choice \n")
@@ -83,7 +85,7 @@ def get_move(rw:int,cl:int,player:int,brd:List)->board:
     # Get col
     while user_choice < 1 or user_choice > COLS:
         try:
-            user_choice = int(input(f"Please choose a colum number between 1 and {COLS} > "))
+            user_choice = int(input(f"Please choose a colum number between 1 and {ROWS} > "))
         except ValueError:
             print('We expect you to enter a valid integer')
         cl = user_choice
@@ -102,7 +104,7 @@ def get_move(rw:int,cl:int,player:int,brd:List)->board:
 # ------------ #
 
 if __name__ == "__main__":
-    
+
     while True:
 
         if moves_left(board) is False:
