@@ -1,0 +1,69 @@
+''' Scraper API multi YouTube Demo '''
+
+# https://docs.python.org/3/library/concurrent.futures.html#threadpoolexecutor-example
+# https://www.scraperapi.com/quick-start-guides/python-requests-beautifulsoup-scraper/
+
+import os
+import concurrent.futures
+from urllib.parse import urlencode
+import requests
+from bs4 import BeautifulSoup
+
+from dotenv import load_dotenv   #for python-dotenv method
+load_dotenv()                    #for python-dotenv method
+
+
+API_KEY = os.environ.get('apikey')
+
+
+NUM_RETRIES = 3
+NUM_THREADS = 5
+
+
+## Example list of urls to scrape
+list_of_urls = [
+            'http://quotes.toscrape.com/page/1/',
+            'http://quotes.toscrape.com/page/2/',
+        ]
+
+
+## we will store the scraped data in this list
+scraped_quotes = []
+
+def scrape_url(url):
+    ''' Scraper API - without SDK '''
+    params = {'api_key': API_KEY, 'url': url}
+
+    # send request to scraperapi, and automatically retry failed requests
+    for _ in range(NUM_RETRIES):
+        try:
+            response = requests.get('http://api.scraperapi.com/', params=urlencode(params))
+            if response.status_code in [200, 404]:
+                ## escape for loop if the API returns a successful response
+                break
+        except requests.exceptions.ConnectionError:
+            response = ''
+
+    ## parse data if 200 status code (successful response)
+    if response.status_code == 200:
+        ## Example: parse data with beautifulsoup
+        html_response = response.text
+        soup = BeautifulSoup(html_response, "html.parser")
+        quotes_sections = soup.find_all('div', class_="quote")
+
+        ## loop through each quotes section and extract the quote and author
+        for quote_block in quotes_sections:
+            quote = quote_block.find('span', class_='text').text
+            author = quote_block.find('small', class_='author').text
+
+            ## add scraped data to "scraped_quotes" list
+            scraped_quotes.append({
+                'quote': quote,
+                'author': author
+            })
+
+with concurrent.futures.ThreadPoolExecutor(max_workers=NUM_THREADS) as executor:
+    executor.map(scrape_url, list_of_urls)
+
+
+print(scraped_quotes)
