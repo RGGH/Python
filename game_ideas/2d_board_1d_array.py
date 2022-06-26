@@ -65,10 +65,11 @@ def evaluate() :
             if abs(board[j+(BOARD_W*i)])==1:
 
                 # Check rows - 3 in a row
-                if (board[j+(BOARD_W)*i]==board[j+(BOARD_W*i)+1] and board[j+(BOARD_W*i)+1] ==  board[j+(BOARD_W*i)+2]):
+                if (board[j+(BOARD_W)*i]==board[j+(BOARD_W*i)+1] 
+                and board[j+(BOARD_W*i)+1] ==  board[j+(BOARD_W*i)+2]):
                     if board[j+(BOARD_W)*i] == 1:
                         return 30, PLAYER
-                    if board[j+(BOARD_W)*i] == 1:
+                    if board[j+(BOARD_W)*i] == -1:
                         return -30, AI
                 
                 #2 Check rows - 2 in a row  
@@ -84,7 +85,6 @@ def evaluate() :
 
         # 3 in a COL
             if abs(board[j+(BOARD_W*i)])==1:
-                if board[(i*BOARD_W)+j]==1 or board[(i*BOARD_W)+j]==-1:
                     if (board[(i*BOARD_W)+j]==board[(i+1)*BOARD_W+j]
                     and board[(i+1)*(BOARD_W)+j] ==  board[(i+2)*(BOARD_W)+j]):
                         if board[j+(BOARD_W)*i] == 1:
@@ -99,7 +99,8 @@ def evaluate() :
                         return 20, PLAYER
                     if board[j+(BOARD_W)*i] == -1:
                         return -20, AI
-
+    
+    return 0
 
 def get_move(rw:int,cl:int,turn:int,brd:List)->board:
     ''' get the row and column number from user '''
@@ -132,6 +133,77 @@ def get_move(rw:int,cl:int,turn:int,brd:List)->board:
 
     return brd
 
+
+
+# This is the minimax function. It considers all
+# the possible ways the game can go and returns
+# the value of the board
+def minimax(board, depth, isMax) :
+    score = evaluate(board)
+ 
+    # If Maximizer has won the game return his/her
+    # evaluated score
+    if (score == 30) :
+        return score
+ 
+    # If Minimizer has won the game return his/her
+    # evaluated score
+    if (score == -30) :
+        return score
+ 
+    # If there are no more moves and no winner then
+    # it is a tie
+    if (moves_left(board) == False) :
+        return 0
+ 
+    # If this maximizer's move
+    if (isMax) :    
+        best = -1000
+ 
+        # Traverse all cells
+        for i in range(BOARD_H) :        
+            for j in range(BOARD_W) :
+              
+                # Check if cell is empty
+                if (board[i][j]=='0') :
+                 
+                    # Make the move
+                    board[i][j] = PLAYER
+ 
+                    # Call minimax recursively and choose
+                    # the maximum value
+                    best = max( best, minimax(board,
+                                              depth + 1,
+                                              not isMax) )
+ 
+                    # Undo the move
+                    board[i][j] = '0'
+        return best
+ 
+    # If this minimizer's move
+    else :
+        best = 1000
+ 
+        # Traverse all cells
+        for i in range(BOARD_H) :        
+            for j in range(BOARD_W) :
+              
+                # Check if cell is empty
+                if (board[i][j] == '0') :
+                 
+                    # Make the move
+                    board[i][j] = AI
+ 
+                    # Call minimax recursively and choose
+                    # the minimum value
+                    best = min(best, minimax(board, depth + 1, not isMax))
+ 
+                    # Undo the move
+                    board[i][j] = '0'
+        return best
+
+
+
 # ------------ #
 # -- Start --- #
 # ------------ #
@@ -157,4 +229,3 @@ if __name__ == "__main__":
 
         MOVE_COUNTER+=1
 
-# ------------ #
