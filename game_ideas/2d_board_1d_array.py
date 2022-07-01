@@ -41,10 +41,11 @@ GAME_OVER = 0
 
 def game_won(brd):
     ''' check for 3 in a row or column '''
-    if evaluate(brd)[1]== 30:
+    if evaluate(brd,turn=PLAYER)== 30:
         return PLAYER
-    if evaluate(brd)[0]== -30:
+    if evaluate(brd,turn=AI)== -30:
         return AI
+
 
 def moves_left(brd):
     ''' check each square of every column of every row '''
@@ -74,81 +75,53 @@ def update_board(brd, best):
 
                 # Make the AI move
                 brd[j+(BOARD_W*i)] = AI 
+
                 return
 
 
-def evaluate(brd):
+def evaluate(brd,turn):
     ''' heuristics '''
-         
-    ### change below to use CASE rather than nested if ###
-         
-    AI_score=0
-    PLAYER_score=0
+
+    score = 0
 
     for i in range(1, BOARD_H):
         for j in range(1, BOARD_W):
-            ''' Evaluate AI '''
-            if (brd[j+(BOARD_W*i)]) == AI:
 
-                # Check rows - 3 in a row
+                #----------------
+
+            ### Evaluate Player 
+
+            if 0 < brd[j+(BOARD_W*i)] <9:
+
+
+                # 3 Check rows - 3 in a row
                 if (brd[j+(BOARD_W)*i] == brd[j+(BOARD_W*i)+1]
                 and brd[j+(BOARD_W*i)+1] == brd[j+(BOARD_W*i)+2]):
-                    AI_score =  -30 #, AI
+                    score = 30 # Player
+                    break
+                # 3 in a COL
+                if (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]
+                and brd[(i+1)*(BOARD_W)+j] == brd[(i+2)*(BOARD_W)+j]):
+                    score = 30 # Player
                     break
 
                 # 2 Check rows - 2 in a row
                 if (brd[j+(BOARD_W)*i] == brd[j+(BOARD_W*i)+1]):
-                    AI_score = -20 #, AI
+                    score = 20 # Player
                     break
-       
-                #----------------
-                          
                 # 2 in a COL
                 if (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]):
-                    AI_score = -20 # , AI
+                    score = 20 # Player
                     break
 
-                # 3 in a COL
-                if (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]
-                and brd[(i+1)*(BOARD_W)+j] == brd[(i+2)*(BOARD_W)+j]):
-                    AI_score = -30 # , AI
-                    break
-
-            ''' Evaluate Player'''
-            if (brd[j+(BOARD_W*i)]) == PLAYER:
-                
-                # Check rows - 3 in a row
-                if (brd[j+(BOARD_W)*i] == brd[j+(BOARD_W*i)+1]
-                and brd[j+(BOARD_W*i)+1] == brd[j+(BOARD_W*i)+2]):
-                    PLAYER_score =  30 #, 
-                    break
-
-                # 2 Check rows - 2 in a row
-                if (brd[j+(BOARD_W)*i] == brd[j+(BOARD_W*i)+1]):
-                    PLAYER_score = 20 #, 
-                    break
-
-                # if (brd[j+(BOARD_W*i)]) == PLAYER:
-                #     PLAYER_score = 10 #,            
+                score = 10 # Player
 
                 #----------------
-
-                # 3 in a COL
-                if (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]
-                and brd[(i+1)*(BOARD_W)+j] == brd[(i+2)*(BOARD_W)+j]):
-                    PLAYER_score = 30 # , AI
-                    break
-
-                # 2 in a COL
-                if (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]):
-                    PLAYER_score = 20 # , AI
-                    break
-                        
-                # # 1 in a COL
-                # PLAYER_score = 10 # , AI
 
     #print(f"AI_Score = {AI_score} ***  PLAYER_score = {PLAYER_score}")
-    return AI_score, PLAYER_score
+    if turn == AI:
+        return score * -1
+    return score
 
 
 def get_move(rw: int, cl: int, brd: List) -> board:
@@ -175,10 +148,8 @@ def get_move(rw: int, cl: int, brd: List) -> board:
 
     pos = ((int(rw)*BOARD_W))+(int(cl))
 
-    if MOVE_COUNTER % 2 != 0:
-        brd[pos] = 1
-    else:
-        brd[pos] = 2
+
+    brd[pos] = PLAYER
 
     return brd
 
@@ -188,21 +159,22 @@ def get_move(rw: int, cl: int, brd: List) -> board:
 # the value of the brd
 def minimax(brd, depth, is_max):
     ''' originally based on geeksforgeeks example '''
-    score = evaluate(brd)
+
+    a_score = evaluate(brd,turn=AI)
 
     # If Maximizer has won the game return 
     # evaluated score
-    if (score == 30):
+    if (a_score == 30):
 
         #print("Player won")
-        return score
+        return a_score
 
     # If Minimizer has won the game return 
     # evaluated score
-    if (score == -30):
+    if (a_score == -30):
  
         #print("AI won")
-        return score
+        return a_score
 
     # If there are no more moves and no winner then
     # it is a tie
@@ -265,7 +237,7 @@ def minimax(brd, depth, is_max):
 
 def AI_move(brd):
     ''' call minimax '''
-    best = minimax(brd, 0, False)
+    best = minimax(brd, 0, True)
     print(best)
     return best
 
@@ -286,32 +258,13 @@ if __name__ == "__main__":
     # Start Game Loop
     while not GAME_OVER:
     
-
-        # Checkfor winner 
-        if game_won(board) == PLAYER:
-            print(colored("\n*** Game Over - human wins ***\n", "green"))
-            GAME_OVER = True
-            break
-        
-        if game_won(board) == AI:
-            print(colored("\n*** Game Over - AI wins ***\n", "blue")) 
-            GAME_OVER=True
-            break
-
-        # Check for tie
-        if not moves_left(board):
-            print(colored("*** Game Over! - Tie *** ","green"))
-            GAME_OVER=True
-            break
-
         # Play Moves
             
-        # Human
+        ############################################## Human
         get_move(ROW, COL, board)
         print_board(board)
-        MOVE_COUNTER +=1
 
-        # Checkfor winner 
+        # Check for winner 
         if game_won(board) == PLAYER:
             print(colored("\n*** Game Over - human wins ***\n", "green"))
             GAME_OVER = True
@@ -328,19 +281,35 @@ if __name__ == "__main__":
             GAME_OVER=True
             break
         
-        # AI
-        print("\nAI")
+        ################################################## AI
+        print("\nAI to play")
         starttime = timeit.default_timer()
         print("The start time is :",starttime)
+        #
         vbest = AI_move(board)
+        print(f" best move = {vbest}")
         update_board(board, vbest)
+        #
         print_board(board)
-        print("The time difference is :", timeit.default_timer() - starttime)
-        print(f"\nAI Score = {evaluate(board)[0]}")
-        print(f"Player Score = {evaluate(board)[1]}")
-        MOVE_COUNTER +=1
 
+        # Check for winner 
+        if game_won(board) == PLAYER:
+            print(colored("\n*** Game Over - human wins ***\n", "green"))
+            GAME_OVER = True
+            break
+        
+        if game_won(board) == AI:
+            print(colored("\n*** Game Over - AI wins ***\n", "blue")) 
+            GAME_OVER=True
+            break
 
-
+        # Check for tie
+        if not moves_left(board):
+            print(colored("*** Game Over! - Tie *** ","green"))
+            GAME_OVER=True
+            break
     
+        print("\nTime difference is :", timeit.default_timer() - starttime)
+        print(f"\nAI Score = {evaluate(board, turn=AI)}")
+        print(f"Player Score = {evaluate(board, turn=PLAYER)}")
         
