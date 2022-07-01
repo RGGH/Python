@@ -28,8 +28,6 @@ COL = 0
 
 BOARD_LEN = BOARD_H * BOARD_W
 
-MOVE_COUNTER = 1
-
 AI = 2
 PLAYER = 1
 
@@ -97,28 +95,25 @@ def evaluate(brd,turn):
                 # 3 Check rows - 3 in a row
                 if (brd[j+(BOARD_W)*i] == brd[j+(BOARD_W*i)+1]
                 and brd[j+(BOARD_W*i)+1] == brd[j+(BOARD_W*i)+2]):
-                    score = 30 # Player
+                    score = 30
                     break
                 # 3 in a COL
                 if (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]
                 and brd[(i+1)*(BOARD_W)+j] == brd[(i+2)*(BOARD_W)+j]):
-                    score = 30 # Player
+                    score = 30
                     break
 
                 # 2 Check rows - 2 in a row
                 if (brd[j+(BOARD_W)*i] == brd[j+(BOARD_W*i)+1]):
-                    score = 20 # Player
+                    score = 20
                     break
                 # 2 in a COL
                 if (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]):
-                    score = 20 # Player
+                    score = 20
                     break
 
-                score = 10 # Player
+                score = 10
 
-                #----------------
-
-    #print(f"AI_Score = {AI_score} ***  PLAYER_score = {PLAYER_score}")
     if turn == AI:
         return score * -1
     return score
@@ -147,7 +142,6 @@ def get_move(rw: int, cl: int, brd: List) -> board:
     cl = user_choice
 
     pos = ((int(rw)*BOARD_W))+(int(cl))
-
 
     brd[pos] = PLAYER
 
@@ -247,19 +241,15 @@ def AI_move(brd):
 
 if __name__ == "__main__":
 
-    ''' Main '''
-
-    # Print board    
     print(colored("\n ## redandgreen.co.uk ##", "green"))
     print(colored(" #### Starting Game ####\n", "red"))
-
     print_board(board)
 
     # Start Game Loop
     while not GAME_OVER:
-    
+
         # Play Moves
-            
+
         ############################################## Human
         get_move(ROW, COL, board)
         print_board(board)
@@ -297,7 +287,7 @@ if __name__ == "__main__":
             print(colored("\n*** Game Over - human wins ***\n", "green"))
             GAME_OVER = True
             break
-        
+
         if game_won(board) == AI:
             print(colored("\n*** Game Over - AI wins ***\n", "blue")) 
             GAME_OVER=True
@@ -308,8 +298,8 @@ if __name__ == "__main__":
             print(colored("*** Game Over! - Tie *** ","green"))
             GAME_OVER=True
             break
-    
+
         print("\nTime difference is :", timeit.default_timer() - starttime)
         print(f"\nAI Score = {evaluate(board, turn=AI)}")
         print(f"Player Score = {evaluate(board, turn=PLAYER)}")
-        
+
