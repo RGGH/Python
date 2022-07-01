@@ -79,7 +79,9 @@ def update_board(brd, best):
 
 def evaluate(brd):
     ''' heuristics '''
-
+         
+    ### change below to use CASE rather than nested if ###
+         
     AI_score=0
     PLAYER_score=0
 
