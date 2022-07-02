@@ -33,15 +33,18 @@ PLAYER = 1
 
 GAME_OVER = 0
 
+
 # -------------------------
 # -------Functions --------
 # -------------------------
 
 def game_won(brd):
     ''' check for 3 in a row or column '''
-    if evaluate(brd,turn=PLAYER)== 30:
+    if evaluate(brd) == 30:
+        #print(PLAYER, "human wins")
         return PLAYER
-    if evaluate(brd,turn=AI)== -30:
+    if evaluate(brd)== -30:
+        #print(AI, "AI wins")
         return AI
 
 
@@ -60,7 +63,8 @@ def print_board(brd):
     for i in range(BOARD_H):
         for j in range(BOARD_W):
             print(brd[j+BOARD_W*i],end=" ")
-        print(f"- row {i}")
+      
+        print(f" : row {i}")
 
 
 def update_board(brd, best):
@@ -77,47 +81,48 @@ def update_board(brd, best):
                 return
 
 
-def evaluate(brd,turn):
-    ''' heuristics '''
+def evaluate(brd):
+    ''' heuristics - score for minimax '''
+    mscore = 0
+    maximum = 0
+    npn = -1
 
-    score = 0
-
-    for i in range(1, BOARD_H):
-        for j in range(1, BOARD_W):
-
-                #----------------
-
-            ### Evaluate Player 
-
+    for i in range(1, BOARD_H-1):
+        for j in range(1, BOARD_W-2):
+    
+            # Evaluate Board 
             if 0 < brd[j+(BOARD_W*i)] <9:
 
-
-                # 3 Check rows - 3 in a row
-                if (brd[j+(BOARD_W)*i] == brd[j+(BOARD_W*i)+1]
+                # 3 Check rows 3 in a row
+                if (brd[j+(BOARD_W*i)] == brd[j+(BOARD_W*i)+1]
                 and brd[j+(BOARD_W*i)+1] == brd[j+(BOARD_W*i)+2]):
-                    score = 30
-                    break
-                # 3 in a COL
-                if (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]
-                and brd[(i+1)*(BOARD_W)+j] == brd[(i+2)*(BOARD_W)+j]):
-                    score = 30
-                    break
+                    mscore = 30
+                    if brd[j+(BOARD_W*i)] == 2:
+                        mscore = - 30
 
-                # 2 Check rows - 2 in a row
-                if (brd[j+(BOARD_W)*i] == brd[j+(BOARD_W*i)+1]):
-                    score = 20
-                    break
-                # 2 in a COL
-                if (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]):
-                    score = 20
-                    break
+                # 3 Check for 3 in a Column
+                elif (brd[(i*BOARD_W)+j] == brd[((i+1)*BOARD_W)+j]
+                and brd[(i*BOARD_W)+j] == brd[((i+2)*BOARD_W)+j]):
+                    mscore = 30
+                    if brd[j+(BOARD_W*i)] == 2:
+                        mscore = -30
 
-                score = 10
+                # 2 Check rows 2 in a row
+                elif (brd[j+(BOARD_W)*i] == brd[j+(BOARD_W*i)+1]):
+                    mscore = 20
+                    if brd[j+(BOARD_W*i)] == 2:
+                        mscore = -20
 
-    if turn == AI:
-        return score * -1
-    return score
+                # 2 Check for 2 in a Column
+                elif (brd[(i*BOARD_W)+j] == brd[(i+1)*BOARD_W+j]):
+                    mscore = 20
+                    if brd[j+(BOARD_W*i)] == 2:
+                        mscore = -20
 
+                if abs(maximum) < abs(mscore):
+                    maximum = mscore
+    #print("Score =", maximum)
+    return maximum
 
 def get_move(rw: int, cl: int, brd: List) -> board:
     ''' get the row and column number from user '''
@@ -140,11 +145,9 @@ def get_move(rw: int, cl: int, brd: List) -> board:
     except ValueError:
         print('We expect you to enter a valid integer')
     cl = user_choice
-
     pos = ((int(rw)*BOARD_W))+(int(cl))
 
     brd[pos] = PLAYER
-
     return brd
 
 
@@ -154,31 +157,22 @@ def get_move(rw: int, cl: int, brd: List) -> board:
 def minimax(brd, depth, is_max):
     ''' originally based on geeksforgeeks example '''
 
-    a_score = evaluate(brd,turn=AI)
-
-    # If Maximizer has won the game return 
     # evaluated score
-    if (a_score == 30):
+    if evaluate(brd) == PLAYER:
+        print("PLAYER")
+        return PLAYER
 
-        #print("Player won")
-        return a_score
+    if evaluate(brd) == AI:
+        print("AI")
+        return AI
 
-    # If Minimizer has won the game return 
-    # evaluated score
-    if (a_score == -30):
- 
-        #print("AI won")
-        return a_score
-
-    # If there are no more moves and no winner then
-    # it is a tie
-    if not moves_left(brd):
+    if not moves_left(board):
         return 0
 
     # If this maximizer's move
     if (is_max):
 
-        best = -30
+        best = -1000
 
         # Traverse all cells
         for i in range(BOARD_H):
@@ -195,16 +189,16 @@ def minimax(brd, depth, is_max):
                     best = max(best, minimax(brd,
                                             depth + 1,
                                             not is_max))
-                    #print("\tmaximizer>",best)
+
                     # Undo the move
                     brd[j+(BOARD_W*i)] = 0
 
-        print(f"max depth ={depth} best={best}")
+        #print(f"max depth ={depth} best={best}")
         return best
 
     # If this minimizer's move
     else:
-        best = 30
+        best = 1000
 
         # Traverse all cells
         for i in range(BOARD_H):
@@ -220,19 +214,18 @@ def minimax(brd, depth, is_max):
                     # the minimum value
                     best = min(best, minimax(brd, 
                                             depth + 1, 
-                                            not is_max))
-                    #print("minimizer...>",best)
+                                            is_max))
+
                     # Undo the move
                     brd[j+(BOARD_W*i)] = 0
-        
-        print(f"min depth ={depth} best={best}")
+
+
         return best
 
 
-def AI_move(brd):
+def ai_move(brd):
     ''' call minimax '''
     best = minimax(brd, 0, True)
-    print(best)
     return best
 
 # ------------ #
@@ -253,15 +246,16 @@ if __name__ == "__main__":
         ############################################## Human
         get_move(ROW, COL, board)
         print_board(board)
+        #print(colored(f"\nGame Score = {evaluate(board)}","blue"))
 
         # Check for winner 
         if game_won(board) == PLAYER:
-            print(colored("\n*** Game Over - human wins ***\n", "green"))
+            print(colored("\n*** Game Over p ***\n", "green"))
             GAME_OVER = True
             break
         
         if game_won(board) == AI:
-            print(colored("\n*** Game Over - AI wins ***\n", "blue")) 
+            print(colored("\n*** Game Over a ***\n", "blue")) 
             GAME_OVER=True
             break
 
@@ -272,24 +266,24 @@ if __name__ == "__main__":
             break
         
         ################################################## AI
+
         print("\nAI to play")
         starttime = timeit.default_timer()
         print("The start time is :",starttime)
         #
-        vbest = AI_move(board)
+        vbest = ai_move(board)
         print(f" best move = {vbest}")
         update_board(board, vbest)
-        #
         print_board(board)
 
         # Check for winner 
         if game_won(board) == PLAYER:
-            print(colored("\n*** Game Over - human wins ***\n", "green"))
+            print(colored("\n*** Game Over p ***\n", "green"))
             GAME_OVER = True
             break
 
         if game_won(board) == AI:
-            print(colored("\n*** Game Over - AI wins ***\n", "blue")) 
+            print(colored("\n*** Game Over a ***\n", "blue")) 
             GAME_OVER=True
             break
 
@@ -300,6 +294,6 @@ if __name__ == "__main__":
             break
 
         print("\nTime difference is :", timeit.default_timer() - starttime)
-        print(f"\nAI Score = {evaluate(board, turn=AI)}")
-        print(f"Player Score = {evaluate(board, turn=PLAYER)}")
+
+
 
